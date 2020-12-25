@@ -7,6 +7,15 @@ struct Pair {
     b: i32,
 }
 
+impl IntoIterator for Pair {
+    type Item = i32;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        vec![self.a, self.b].into_iter()
+    }
+}
+
 impl std::fmt::Display for Pair {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "({}, {})", self.a, self.b)
@@ -50,11 +59,11 @@ pub fn run(params: Parameters) {
         .parse()
         .expect("Non-numeric goal given.");
 
-    let pair =
+    let coll =
         find_pair_summing_to(numbers.as_ref(), goal).expect("Pair summing to goal does not exist");
-    println!("the pair: {}", pair);
+    println!("the pair: {}", coll);
 
-    let mult = pair.a * pair.b;
+    let mult: i32 = coll.into_iter().product();
 
     println!("their multiplication: {}", mult);
 }
