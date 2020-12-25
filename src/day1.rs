@@ -2,17 +2,18 @@ use adventofcode::Parameters;
 use std::fmt;
 use std::fs;
 
+trait Product {
+    fn product(&self) -> i32;
+}
+
 struct Pair {
     a: i32,
     b: i32,
 }
 
-impl IntoIterator for Pair {
-    type Item = i32;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        vec![self.a, self.b].into_iter()
+impl Product for Pair {
+    fn product(&self) -> i32 {
+        self.a * self.b
     }
 }
 
@@ -22,19 +23,18 @@ impl std::fmt::Display for Pair {
     }
 }
 
-fn find_pair_summing_to(numbers: &Vec<i32>, sum: i32) -> Option<Pair> {
-    let mut pair: Option<Pair> = None;
+fn find_pair_summing_to(numbers: &Vec<i32>, sum: i32) -> Option<Box<dyn Product>> {
     for a in numbers.iter() {
         for b in numbers.iter() {
             if a + b == sum {
-                pair = Some(Pair {
+                return Some(Box::new(Pair {
                     a: a.clone(),
                     b: b.clone(),
-                });
+                }));
             }
         }
     }
-    return pair;
+    return None;
 }
 
 pub fn run(params: Parameters) {
@@ -61,9 +61,9 @@ pub fn run(params: Parameters) {
 
     let coll =
         find_pair_summing_to(numbers.as_ref(), goal).expect("Pair summing to goal does not exist");
-    println!("the pair: {}", coll);
+    // println!("the pair: {:?}", coll);
 
-    let mult: i32 = coll.into_iter().product();
+    let mult: i32 = coll.product();
 
     println!("their multiplication: {}", mult);
 }
