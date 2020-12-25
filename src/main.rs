@@ -4,23 +4,27 @@ use std::fs;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config = parse_config(&args);
+    let config = parse_config(&args).expect("Parameters should be given.");
 
-    print!("Running: {} with args: {}", config.problem, config.args);
+    print!("Running: {} with args: {:?}", config.problem, config.args);
 
-    let contents = fs::read_to_string(config.args).expect("Something went wrong reading the file");
+    // let contents = fs::read_to_string(config.args.get(0).as_ref())
+    //     .expect("Something went wrong reading the file");
 
-    println!("{}", contents);
+    // println!("{}", contents);
 }
 
 struct Parameters {
     problem: String,
-    args: String,
+    args: Vec<String>,
 }
 
-fn parse_config(args: &[String]) -> Parameters {
-    let problem = args[1].clone();
-    let args = args[2].clone();
-
-    Parameters { problem, args }
+fn parse_config(args: &[String]) -> Option<Parameters> {
+    return match args.split_first() {
+        Some((problem, args)) => Some(Parameters {
+            problem: problem.to_string(),
+            args: args.to_vec(),
+        }),
+        None => None,
+    };
 }
