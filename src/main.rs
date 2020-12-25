@@ -1,10 +1,12 @@
 use std::env;
 use std::fs;
 
+use adventofcode2020::Parameters;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config = parse_config(&args).expect("Parameters should be given.");
+    let config = adventofcode2020::parse_config(&args).expect("Parameters should be given.");
 
     print!("Running: {} with args: {:?}", config.problem, config.args);
 
@@ -18,16 +20,4 @@ fn main() {
     .expect("Something went wrong reading the file");
 
     println!("{}", contents);
-}
-
-struct Parameters {
-    problem: String,
-    args: Vec<String>,
-}
-
-fn parse_config(args: &[String]) -> Option<Parameters> {
-    Some(Parameters {
-        problem: args[1].clone(),
-        args: args[2..].to_vec(),
-    })
 }
