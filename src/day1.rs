@@ -37,6 +37,41 @@ fn find_pair_summing_to(numbers: &Vec<i32>, sum: i32) -> Option<Box<dyn Product>
     return None;
 }
 
+struct Triple {
+    a: i32,
+    b: i32,
+    c: i32,
+}
+
+impl Product for Triple {
+    fn product(&self) -> i32 {
+        self.a * self.b * self.c
+    }
+}
+
+impl std::fmt::Display for Triple {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {}, {})", self.a, self.b, self.c)
+    }
+}
+
+fn find_triple_summing_to(numbers: &Vec<i32>, sum: i32) -> Option<Box<dyn Product>> {
+    for a in numbers.iter() {
+        for b in numbers.iter() {
+            for c in numbers.iter() {
+                if a + b + c == sum {
+                    return Some(Box::new(Triple {
+                        a: a.clone(),
+                        b: b.clone(),
+                        c: c.clone(),
+                    }));
+                }
+            }
+        }
+    }
+    return None;
+}
+
 pub fn run(params: Parameters) {
     let numbers: Vec<i32> = fs::read_to_string(
         params
@@ -61,7 +96,13 @@ pub fn run(params: Parameters) {
 
     let coll =
         find_pair_summing_to(numbers.as_ref(), goal).expect("Pair summing to goal does not exist");
-    // println!("the pair: {:?}", coll);
+
+    let mult: i32 = coll.product();
+
+    println!("their multiplication: {}", mult);
+
+    let coll = find_triple_summing_to(numbers.as_ref(), goal)
+        .expect("Pair summing to goal does not exist");
 
     let mult: i32 = coll.product();
 
