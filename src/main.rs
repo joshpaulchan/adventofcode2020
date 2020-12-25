@@ -20,11 +20,8 @@ struct Parameters {
 }
 
 fn parse_config(args: &[String]) -> Option<Parameters> {
-    return match args.split_first() {
-        Some((problem, args)) => Some(Parameters {
-            problem: problem.to_string(),
-            args: args.to_vec(),
-        }),
-        None => None,
-    };
+    return Some(Parameters {
+        problem: args[1].clone(),
+        args: args[2..].to_vec(),
+    });
 }
