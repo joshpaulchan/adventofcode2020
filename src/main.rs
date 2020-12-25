@@ -8,10 +8,16 @@ fn main() {
 
     print!("Running: {} with args: {:?}", config.problem, config.args);
 
-    // let contents = fs::read_to_string(config.args.get(0).as_ref())
-    //     .expect("Something went wrong reading the file");
+    let contents = fs::read_to_string(
+        config
+            .args
+            .first()
+            .map(|filename| filename.to_string())
+            .expect("There was no filename given."),
+    )
+    .expect("Something went wrong reading the file");
 
-    // println!("{}", contents);
+    println!("{}", contents);
 }
 
 struct Parameters {
